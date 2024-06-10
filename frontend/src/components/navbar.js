@@ -5,7 +5,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useLogout } from "../hooks/useLogout";
 
 const Navbar = () => {
-  const { user } = useAuthContext();
+  const { donor } = useAuthContext();
   const { logout } = useLogout();
 
   const handleClick = () => {
@@ -22,7 +22,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="flex w-1/2 place-content-around">
-          {user && (
+          {donor && (
             <>
               <Link to="/">
                 <h1>Home</h1>
@@ -39,7 +39,7 @@ const Navbar = () => {
             </>
           )}
 
-          {!user && (
+          {!donor && (
             <>
               <Link to="/">
                 <h1>Home</h1>

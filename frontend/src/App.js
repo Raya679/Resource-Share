@@ -10,7 +10,7 @@ import Signup from "./pages/signup";
 import Login from "./pages/login";
 
 function App() {
-  const {user} = useAuthContext()
+  const {donor} = useAuthContext()
 
   return (
     <div className="bg-teal-50 h-screen">
@@ -18,8 +18,8 @@ function App() {
         <Navbar></Navbar>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signup" element={!user ? <Signup/> : <Navigate to="/" /> }/>
-          <Route path="/login" element={!user ? <Login/> : <Navigate to="/" />}/>
+          <Route path="/signup" element={!donor ? <Signup/> : <Navigate to="/" /> }/>
+          <Route path="/login" element={!donor ? <Login/> : <Navigate to="/" />}/>
         </Routes>
       </BrowserRouter>
     </div>

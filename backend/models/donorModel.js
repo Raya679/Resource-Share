@@ -9,11 +9,19 @@ const signupSchema = new Schema({
     required: true,
     unique: true,
   },
-
-  username: {
+  name: {
     type: String,
     required: true,
-    unique: true,
+  },
+  contact: {
+    type:Number,
+    required:true,
+    min:10
+  },
+  aadharNo:{
+    type:Number,
+    required:true,
+    min:12
   },
   password: {
     type: String,
@@ -22,11 +30,10 @@ const signupSchema = new Schema({
 });
 
 // static signup method
-signupSchema.statics.signup = async function (email, username, password) {
-  const exists_username = await this.findOne({ username });
+signupSchema.statics.signup = async function (email, name, contact,aadharNo, password) {
   const exists_email = await this.findOne({ email });
 
-  if (!email || !username || !password) {
+  if (!email || !name || !contact || !aadharNo|| !password) {
     throw Error("All fields must be filled");
   }
 
@@ -40,10 +47,6 @@ signupSchema.statics.signup = async function (email, username, password) {
     );
   }
 
-  if (exists_username) {
-    throw Error("An account already exists with this username");
-  }
-
   if (exists_email) {
     throw Error("Email already in use");
   }
@@ -51,27 +54,27 @@ signupSchema.statics.signup = async function (email, username, password) {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
 
-  const user = await this.create({ email, username, password: hash });
+  const donor = await this.create({ email, name, contact,aadharNo, password: hash });
 
-  return user;
+  return donor;
 };
 
-signupSchema.statics.login = async function (username, password) {
-  const user = await this.findOne({ username });
+signupSchema.statics.login = async function (email, password) {
+  const donor = await this.findOne({ email });
 
-  if (!password || !username) {
+  if (!password || !email) {
     throw Error("All fields must be filled");
   }
-  if (!user) {
-    throw Error("Username does not exist");
+  if (!donor) {
+    throw Error("Email does not exist");
   }
 
-  const match = await bcrypt.compare(password, user.password);
+  const match = await bcrypt.compare(password, donor.password);
   if (!match) {
     throw Error("Incorrect password");
   }
-  return user;
+  return donor;
 };
 
-const User = new mongoose.model("User", signupSchema);
-module.exports = User;
+const Donor= new mongoose.model("Donor", signupSchema);
+module.exports = Donor;

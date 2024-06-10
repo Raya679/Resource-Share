@@ -2,15 +2,16 @@ import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const { login, error, isLoading } = useLogin();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(username, password);
-    console.log(username, password);
+    await login(email, password);
+    // console.log(email, password);
   };
 
   return (
@@ -20,12 +21,12 @@ const Login = () => {
         
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Username:</label>
+            <label className="block text-sm font-medium text-gray-700">Email:</label>
             <input
-              type="text"
+              type="email"
               required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
             />
           </div>

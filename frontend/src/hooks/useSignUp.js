@@ -6,15 +6,15 @@ export const useSignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAuthContext();
 
-  const signup = async (email, username, password) => {
+  const signup = async (email, name, contact,aadharNo, password) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/user/signup", {
+      const response = await fetch("/api/donor/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ email, name, contact,aadharNo, password }),
       });
       // console.log('Response Status',response.status)
 
@@ -25,7 +25,7 @@ export const useSignUp = () => {
         throw new Error(json.error || "Sign up failed");
       }
 
-      localStorage.setItem("user", JSON.stringify(json));
+      localStorage.setItem("donor", JSON.stringify(json));
       dispatch({ type: "LOGIN", payload: json });
     } catch (error) {
       // console.error('Error during signup: ', error)

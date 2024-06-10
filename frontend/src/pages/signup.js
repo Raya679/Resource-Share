@@ -3,18 +3,20 @@ import { useSignUp } from "../hooks/useSignUp";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [aadharNo, setAadharNo] = useState("");
   const [password, setPassword] = useState("");
-
+ 
   const { signup, error, isLoading } = useSignUp();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signup(email, username, password);
+    await signup(email, name, contact, aadharNo, password);
   };
 
   return (
-    <div className="flex justify-center items-center m-28 bg-teal-50 overflow-hidden">
+    <div className="flex justify-center items-center m-10 bg-teal-50 overflow-hidden">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-4xl font-bold text-teal-700 text-center">Give & Glow</h2>
         
@@ -31,12 +33,34 @@ const Signup = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Username:</label>
+            <label className="block text-sm font-medium text-gray-700">Name:</label>
             <input
               type="text"
               required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Contact:</label>
+            <input
+              type="text"
+              required
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Aadhar No:</label>
+            <input
+              type="text"
+              required
+              value={aadharNo}
+              onChange={(e) => setAadharNo(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
             />
           </div>

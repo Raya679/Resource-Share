@@ -6,15 +6,15 @@ export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAuthContext();
 
-  const login = async (username, password) => {
+  const login = async (email, password) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/user/login", {
+      const response = await fetch("/api/donor/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
       // console.log('Response Status',response.status)
 
@@ -25,7 +25,7 @@ export const useLogin = () => {
         throw new Error(json.error || "Login failed");
       }
 
-      localStorage.setItem("user", JSON.stringify(json));
+      localStorage.setItem("donor", JSON.stringify(json));
       dispatch({ type: "LOGIN", payload: json });
     } catch (error) {
       // console.error('Error during login: ', error)
