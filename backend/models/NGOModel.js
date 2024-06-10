@@ -13,15 +13,11 @@ const signupSchema = new Schema({
     type: String,
     required: true,
   },
-  contact: {
+  NGO_ID: {
     type:Number,
     required:true,
-    min:10
-  },
-  aadharNo:{
-    type:Number,
-    required:true,
-    min:12,
+    unique:true,
+    min:10,
   },
   password: {
     type: String,
@@ -30,10 +26,10 @@ const signupSchema = new Schema({
 });
 
 // static signup method
-signupSchema.statics.signup = async function (email, name, contact,aadharNo, password) {
+signupSchema.statics.signup = async function (email, name, NGO_ID, password) {
   const exists_email = await this.findOne({ email });
 
-  if (!email || !name || !contact || !aadharNo|| !password) {
+  if (!email || !name || !NGO_ID|| !password) {
     throw Error("All fields must be filled");
   }
 
@@ -54,27 +50,27 @@ signupSchema.statics.signup = async function (email, name, contact,aadharNo, pas
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
 
-  const donor = await this.create({ email, name, contact,aadharNo, password: hash });
+  const NGO = await this.create({ email, name, NGO_ID, password: hash });
 
-  return donor;
+  return NGO;
 };
 
 signupSchema.statics.login = async function (email, password) {
-  const donor = await this.findOne({ email });
+  const NGO = await this.findOne({ email });
 
   if (!password || !email) {
     throw Error("All fields must be filled");
   }
-  if (!donor) {
+  if (!NGO) {
     throw Error("Email does not exist");
   }
 
-  const match = await bcrypt.compare(password, donor.password);
+  const match = await bcrypt.compare(password, NGO.password);
   if (!match) {
     throw Error("Incorrect password");
   }
-  return donor;
+  return NGO;
 };
 
-const Donor= new mongoose.model("Donor", signupSchema);
-module.exports = Donor;
+const NGO= new mongoose.model("NGO", signupSchema);
+module.exports = NGO;

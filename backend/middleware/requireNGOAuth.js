@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-const Donor = require("../models/donorModel");
+const NGO = require("../models/NGOModel");
 
-const requireDonorAuth = async (req, res, next) => {
+const requireNGOAuth = async (req, res, next) => {
   const { authorization } = req.headers;
-
+  console.log(authorization)
   if (!authorization || !authorization.startsWith("Bearers")) {
-    return res.status(401).json({ error: "Donor Authorization token required" });
+    return res.status(401).json({ error: "NGO Authorization token required" });
   }
 
   const token = authorization.split(" ")[1];
@@ -13,7 +13,7 @@ const requireDonorAuth = async (req, res, next) => {
   try {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
-    req.donor = await Donor.findOne({ _id }).select("_id");
+    req.ngo = await NGO.findOne({ _id }).select("_id");
     next();
   } catch (error) {
     console.log(error);
@@ -21,4 +21,4 @@ const requireDonorAuth = async (req, res, next) => {
   }
 };
 
-module.exports = requireDonorAuth;
+module.exports = requireNGOAuth;
