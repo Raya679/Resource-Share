@@ -4,7 +4,7 @@ const Donor = require("../models/donorModel");
 const requireDonorAuth = async (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith("Bearers")) {
+  if (!authorization || !authorization.startsWith("Bearer")) {
     return res.status(401).json({ error: "Donor Authorization token required" });
   }
 

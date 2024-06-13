@@ -1,28 +1,27 @@
 import { useState } from "react";
-import { useSignUp } from "../hooks/useSignUp";
+import { useSignUpNGO } from "../../hooks/useSignUpNGO";
 
-const Signup = () => {
+const SignupNGO = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [contact, setContact] = useState("");
-  const [aadharNo, setAadharNo] = useState("");
+  const [NGO_ID,setNGO_ID] = useState("");
   const [password, setPassword] = useState("");
  
-  const { signup, error, isLoading } = useSignUp();
+  const { signupNGO, error, isLoading } = useSignUpNGO();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signup(email, name, contact, aadharNo, password);
+    await signupNGO(email, name, NGO_ID, password);
   };
 
   return (
-    <div className="flex justify-center items-center m-10 bg-teal-50 overflow-hidden">
+    <div className="flex justify-center items-center min-h-screen  bg-teal-50 overflow-hidden">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-4xl font-bold text-teal-700 text-center">Give & Glow</h2>
         
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email:</label>
+            <label className="block text-sm font-medium text-gray-700">NGO Email:</label>
             <input
               type="email"
               required
@@ -33,7 +32,7 @@ const Signup = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name:</label>
+            <label className="block text-sm font-medium text-gray-700">NGO Name:</label>
             <input
               type="text"
               required
@@ -44,23 +43,12 @@ const Signup = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Contact:</label>
+            <label className="block text-sm font-medium text-gray-700">NGO ID:</label>
             <input
               type="text"
               required
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Aadhar No:</label>
-            <input
-              type="text"
-              required
-              value={aadharNo}
-              onChange={(e) => setAadharNo(e.target.value)}
+              value={NGO_ID}
+              onChange={(e) => setNGO_ID(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
             />
           </div>
@@ -94,4 +82,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignupNGO;

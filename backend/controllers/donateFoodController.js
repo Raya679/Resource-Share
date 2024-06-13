@@ -1,7 +1,7 @@
 const Food = require('../models/donateFoodModel');
 
 const getDonatedFoodsDonor = async (req, res) => {
-  console.log("Get Food")
+ 
   try {
     const donor_id = req.donor._id;
     const food = await Food.find({ user_id: donor_id }).sort({ createdAt: -1 });
@@ -44,7 +44,7 @@ const bookDonatedFood = async (req, res) => {
       return res.status(404).json({ error: 'Food not found' });
     }
 
-    if(booked.food==true){
+    if(food.booked==true){
         return res.status(400).json({ error: 'Already Booked' });
     }
 

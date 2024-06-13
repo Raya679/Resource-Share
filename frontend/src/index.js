@@ -2,14 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
+
 import { AuthContextProvider } from "./context/authContext";
+import { AuthContextNGOProvider } from "./context/authContextNGO";
+import { FoodDonationsContextProvider } from "./context/foodDonationsContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthContextProvider>
-      <App />
-    </AuthContextProvider>
+    <AuthContextNGOProvider>
+      <AuthContextProvider>
+        <FoodDonationsContextProvider>
+        <App />
+        </FoodDonationsContextProvider>
+      </AuthContextProvider>
+    </AuthContextNGOProvider>
   </React.StrictMode>
 );
 

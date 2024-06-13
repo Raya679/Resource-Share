@@ -1,27 +1,27 @@
 import { useState } from "react";
-import { useLogin } from "../hooks/useLogin";
+import { useLoginNGO } from "../../hooks/useLoginNGO";
 
-const Login = () => {
+const LoginNGO = () => {
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, error, isLoading } = useLogin();
+  const { loginNGO, error, isLoading } = useLoginNGO();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password);
+    await loginNGO(email, password);
     // console.log(email, password);
   };
 
   return (
-    <div className="flex justify-center items-center m-36 bg-teal-50 overflow-y-hidden overscroll-none">
+    <div className="flex justify-center items-center min-h-screen  bg-teal-50 overflow-y-hidden overscroll-none">
       <div className="w-full max-w-md p-3 space-y-6 bg-white rounded-lg shadow-md overflow-y-hidden">
         <h2 className="text-4xl font-bold text-teal-700 text-center">Give & Glow</h2>
         
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email:</label>
+            <label className="block text-sm font-medium text-gray-700">NGO Email:</label>
             <input
               type="email"
               required
@@ -52,7 +52,7 @@ const Login = () => {
           {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
 
           <div className="text-center">
-            <a href="/signup" className="text-teal-500 hover:underline">Don't have an account?</a>
+            <a href="/signupNGO" className="text-teal-500 hover:underline">Don't have an account?</a>
           </div>
         </form>
       </div>
@@ -60,4 +60,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginNGO;

@@ -4,7 +4,7 @@ const NGO = require("../models/NGOModel");
 const requireNGOAuth = async (req, res, next) => {
   const { authorization } = req.headers;
   console.log(authorization)
-  if (!authorization || !authorization.startsWith("Bearers")) {
+  if (!authorization || !authorization.startsWith("Bearer")) {
     return res.status(401).json({ error: "NGO Authorization token required" });
   }
 
