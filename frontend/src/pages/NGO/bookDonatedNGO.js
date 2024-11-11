@@ -1,39 +1,39 @@
 import { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
-import { useFoodDonationsContext } from "../../hooks/useFoodDonationsContext";
+import { useBookDonationsContext } from "../../hooks/useBookDonationsContext";
 import { useAuthContextNGO } from "../../hooks/useAuthContextNGO";
 import "../../css/NGODonationsDashboard.css"; 
 
-const NGOFoodDonationsDashboard = () => {
-  const { foodDonations, dispatch } = useFoodDonationsContext();
+const NGOBookDonationsDashboard = () => {
+  const { bookDonations, dispatch } = useBookDonationsContext();
   const { ngo } = useAuthContextNGO();
   const [notification, setNotification] = useState(null);
 
-  // Get food donations
+  // Get book donations
   useEffect(() => {
-    const fetchFoodDonations = async () => {
-      const response = await fetch("/api/NGO/getFood", {
+    const fetchBookDonations = async () => {
+      const response = await fetch("/api/NGO/getBooks", {
         headers: { Authorization: `Bearer ${ngo.token}` },
       });
       const json = await response.json();
       if (response.ok) {
-        dispatch({ type: "SET_FOOD_DONATIONS", payload: json });
+        dispatch({ type: "SET_BOOK_DONATIONS", payload: json });
       }
     };
 
     if (ngo) {
-      fetchFoodDonations();
+      fetchBookDonations();
     }
   }, [dispatch, ngo]);
 
-  // Book food donation
+  // Book book donation
   const handleBook = async (id) => {
     if (!ngo) {
       console.log("You must be logged in");
       return;
     }
 
-    const response = await fetch(`/api/NGO/bookFood/${id}`, {
+    const response = await fetch(`/api/NGO/bookBooks/${id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${ngo.token}`,
@@ -43,10 +43,10 @@ const NGOFoodDonationsDashboard = () => {
     const json = await response.json();
 
     if (response.ok) {
-      dispatch({ type: "BOOK_FOOD_DONATION", payload: json });
+      dispatch({ type: "BOOK_BOOK_DONATION", payload: json });
 
       // Show notification for 5 seconds
-      setNotification(`Food donation (${json.foodItem}) successfully booked!`);
+      setNotification(`Book donation (${json.bookDescription}) successfully booked!`);
 
       // Automatically hide notification after 5 seconds
       setTimeout(() => {
@@ -58,17 +58,17 @@ const NGOFoodDonationsDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-green-50">
+    <div className="min-h-screen flex flex-col bg-blue-50">
       <Navbar />
       <div className="flex flex-grow items-center justify-center">
         <div className="container mx-auto p-8 max-w-4xl">
-          <h1 className="text-3xl font-bold text-center text-teal-500 mb-8">
-            Food Donations
+          <h1 className="text-3xl font-bold text-center text-blue-600 mb-8">
+            Book Donations
           </h1>
           <div className="flex justify-center">
-            <div className="w-full p-6 bg-white border border-green-400 rounded-lg shadow-lg">
-              <h2 className="text-2xl font-bold text-green-600 mb-4">
-                Food Donations Made
+            <div className="w-full p-6 bg-white border border-blue-400 rounded-lg shadow-lg">
+              <h2 className="text-2xl font-bold text-blue-600 mb-4">
+                Book Donations Made
               </h2>
               <div
                 className="overflow-y-auto"
@@ -78,19 +78,16 @@ const NGOFoodDonationsDashboard = () => {
                 }}
               >
                 <ul>
-                  {foodDonations &&
-                    foodDonations.map((donation) => (
+                  {bookDonations &&
+                    bookDonations.map((donation) => (
                       <li key={donation._id} className="mb-4">
-                        <div className="relative border p-4 rounded-md shadow-md bg-green-50">
+                        <div className="relative border p-4 rounded-md shadow-md bg-blue-50">
                           <div>
                             <p>
-                              <strong>Food Item:</strong> {donation.foodItem}
+                              <strong>Book Description:</strong> {donation.bookDescription}
                             </p>
                             <p>
-                              <strong>Quantity:</strong> {donation.quantity}
-                            </p>
-                            <p>
-                              <strong>Expiry Date:</strong> {donation.expiry}
+                              <strong>Age Group:</strong> {donation.ageGroup}
                             </p>
                             <p>
                               <strong>Address:</strong> {donation.address}
@@ -101,14 +98,14 @@ const NGOFoodDonationsDashboard = () => {
                           </div>
                           {!donation.booked && (
                             <button
-                              className="absolute bottom-2 right-2 text-white bg-green-500 hover:bg-green-600 rounded-md px-4 py-1"
+                              className="absolute bottom-2 right-2 text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-1"
                               onClick={() => handleBook(donation._id)}
                             >
                               Book
                             </button>
                           )}
                           {donation.booked && (
-                            <p className="absolute bottom-2 right-2 text-green-500">
+                            <p className="absolute bottom-2 right-2 text-blue-500">
                               Booked
                             </p>
                           )}
@@ -131,4 +128,4 @@ const NGOFoodDonationsDashboard = () => {
   );
 };
 
-export default NGOFoodDonationsDashboard;
+export default NGOBookDonationsDashboard;

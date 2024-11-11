@@ -10,9 +10,17 @@ import SignupNGO from "./pages/NGO/signupNGO";
 import LoginNGO from "./pages/NGO/loginNGO";
 import DonationsPage from "./pages/NGO/donationsNGO";
 import DonateNow from "./pages/Donor/donateNow";
+
 import DonorFoodDonationsDashboard from "./pages/Donor/foodDonations";
 import NGOFoodDonationsDashboard from "./pages/NGO/foodDonatedNGO";
-import NGOBookedFoodDonationsDashboard from "./pages/NGO/bookedDonationsNGO";
+import NGODonationsDashboard from "./pages/NGO/bookedDonationsNGO";
+
+import DonorBookDonationsDashboard from "./pages/Donor/bookDonations";
+import NGOBookDonationsDashboard from "./pages/NGO/bookDonatedNGO";
+
+import DonorClothesDonationsDashboard from "./pages/Donor/clothesDonations";
+import NGOClothesDonationsDashboard from "./pages/NGO/clothesDonatedNGO";
+
 
 function App() {
   const {donor} = useAuthContext()
@@ -30,9 +38,18 @@ function App() {
           <Route path="/loginNGO" element={!ngo ? <LoginNGO/> : <Navigate to="/" />}/> 
           <Route path="/donationsNGO" element={ngo? <DonationsPage/> : <Navigate to="/" />}/>
           <Route path="/donateNow" element={donor? <DonateNow/> : <Navigate to="/" />}/>
+          
+          <Route path="/bookedNGO" element={ngo? <NGODonationsDashboard/> : <Navigate to="/" />}/>
+
           <Route path="/donateFood" element={donor? <DonorFoodDonationsDashboard/> : <Navigate to="/" />}/>
           <Route path="/donatedFoodNGO" element={ngo? <NGOFoodDonationsDashboard/> : <Navigate to="/" />}/>
-          <Route path="/bookedFoodNGO" element={ngo? <NGOBookedFoodDonationsDashboard/> : <Navigate to="/" />}/>
+          
+          <Route path="/donateBook" element={donor? <DonorBookDonationsDashboard/> : <Navigate to="/" />}/>
+          <Route path="/donatedBookNGO" element={ngo? <NGOBookDonationsDashboard/> : <Navigate to="/" />}/>
+
+          <Route path="/donateClothes" element={donor? <DonorClothesDonationsDashboard/> : <Navigate to="/" />}/>
+          <Route path="/donatedClothesNGO" element={ngo? <NGOClothesDonationsDashboard/> : <Navigate to="/" />}/>
+
         </Routes>
       </BrowserRouter>
     </div>

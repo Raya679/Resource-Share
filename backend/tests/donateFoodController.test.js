@@ -1,0 +1,277 @@
+const request = require("supertest");
+const app = require("../server");
+
+const Food = require("../models/donateFoodModel");
+const Book = require("../models/donateBooksModel");
+const Clothes = require("../models/donateClothesModel");
+
+jest.mock("../models/donateBooksModel");
+jest.mock("../models/donateFoodModel");
+jest.mock("../models/donateClothesModel");
+
+let donorToken, ngoToken;
+
+beforeAll(async () => {
+  const donorLoginResponse = await request(app)
+    .post("/api/donor/login")
+    .send({ email: "raya@gmail.com", password: "Raya123#" })
+    .expect(200);
+  donorToken = donorLoginResponse.body.token;
+
+  const ngoLoginResponse = await request(app)
+    .post("/api/ngo/login")
+    .send({ email: "NGO123@gmail.com", password: "Abcd1234#" })
+    .expect(200);
+  ngoToken = ngoLoginResponse.body.token;
+});
+
+describe("Donation APIs", () => {
+  // Food APIs
+  it("should donate food as a donor", async () => {
+    const foodData = {
+      foodItem: "Pizza",
+      quantity: 5,
+      expiry: "2024-12-31",
+      address: "Test Address",
+      contact: "9876543210",
+      booked: false,
+      user_id: "60c72b2f5f1b2c001f4e0b6b", // Sample ObjectId of a Donor
+    };
+    Food.create.mockResolvedValue(foodData);
+
+    const res = await request(app)
+      .post("/api/donor/donateFood") // Adjusted route for donating food
+      .send(foodData)
+      .set("Authorization", `Bearer ${donorToken}`) // Use donor token
+      .expect(200);
+
+    expect(res.body).toEqual(foodData);
+  });
+
+  it("should fail to donate food if required fields are missing", async () => {
+    const incompleteData = { foodItem: "Pizza" };
+
+    const res = await request(app)
+      .post("/api/donor/donateFood")
+      .send(incompleteData)
+      .set("Authorization", `Bearer ${donorToken}`)
+      .expect(400);
+
+    expect(res.body).toEqual({ error: "Please fill in all the fields" });
+  });
+
+  it("should book a donated food for an NGO", async () => {
+    const mockNgo = { _id: "6732098149087e9a678c671a" }; // Mocked NGO object
+
+    const mockFood = {
+      _id: "foodId123",
+      foodItem: "Rice",
+      quantity: "10kg",
+      expiry: "2024-12-31",
+      address: "123 Main St",
+      contact: "1234567890",
+      booked: false,
+      user_id: "userId123",
+      ngo_id: null,
+      save: jest.fn().mockResolvedValue({
+        _id: "foodId123",
+        foodItem: "Rice",
+        quantity: "10kg",
+        expiry: "2024-12-31",
+        address: "123 Main St",
+        contact: "1234567890",
+        booked: true,
+        user_id: "userId123",
+        ngo_id: mockNgo._id,
+      }),
+    };
+
+    Food.findById.mockResolvedValue(mockFood);
+
+    const res = await request(app)
+      .put("/api/ngo/bookFood/foodId123")
+      .set("Authorization", `Bearer ${ngoToken}`) // Use NGO token for authentication
+      .expect(200);
+
+    expect(res.body).toHaveProperty("booked", true);
+    expect(res.body).toHaveProperty("ngo_id", mockNgo._id);
+
+    expect(mockFood.save).toHaveBeenCalled();
+  });
+
+  it("should fail to book an already booked food", async () => {
+    const mockFood = { _id: "foodId123", booked: true };
+    Food.findById.mockResolvedValue(mockFood);
+
+    const res = await request(app)
+      .put("/api/ngo/bookFood/foodId123") // Adjusted the route for booking donated food
+      .set("Authorization", `Bearer ${ngoToken}`) // Use NGO token
+      .expect(400);
+
+    expect(res.body).toEqual({ error: "Already Booked" });
+  });
+
+  // Book APIs
+  it("should donate book as a donor", async () => {
+    const bookData = {
+      bookDescription: "Maths Textbook",
+      ageGroup: "10-12",
+      address: "Test Address",
+      contact: "9876543210",
+      booked: false,
+      user_id: "60c72b2f5f1b2c001f4e0b6b",
+    };
+    Book.create.mockResolvedValue(bookData);
+
+    const res = await request(app)
+      .post("/api/donor/donateBook")
+      .send(bookData)
+      .set("Authorization", `Bearer ${donorToken}`)
+      .expect(200);
+
+    expect(res.body).toEqual(bookData);
+  });
+
+  it("should fail to donate book if required fields are missing", async () => {
+    const incompleteData = { bookDescription: "Textbook" };
+
+    const res = await request(app)
+      .post("/api/donor/donateBook")
+      .send(incompleteData)
+      .set("Authorization", `Bearer ${donorToken}`)
+      .expect(400);
+
+    expect(res.body).toEqual({ error: "Please fill in all the fields" });
+  });
+
+  it("should book a donated book for an NGO", async () => {
+    const mockNgo = { _id: "6732098149087e9a678c671a" }; // Mocked NGO object
+
+    const mockBook = {
+      _id: "bookId123",
+      bookDescription: "Maths Textbook",
+      ageGroup: "10-12",
+      address: "123 Main St",
+      contact: "1234567890",
+      booked: false,
+      user_id: "userId123",
+      ngo_id: null,
+      save: jest.fn().mockResolvedValue({
+        _id: "bookId123",
+        bookDescription: "Maths Textbook",
+        ageGroup: "10-12",
+        address: "123 Main St",
+        contact: "1234567890",
+        booked: true,
+        user_id: "userId123",
+        ngo_id: mockNgo._id,
+      }),
+    };
+
+    Book.findById.mockResolvedValue(mockBook);
+
+    const res = await request(app)
+      .put("/api/ngo/bookBooks/bookId123")
+      .set("Authorization", `Bearer ${ngoToken}`)
+      .expect(200);
+
+    expect(res.body).toHaveProperty("booked", true);
+    expect(res.body).toHaveProperty("ngo_id", mockNgo._id);
+
+    expect(mockBook.save).toHaveBeenCalled();
+  });
+
+  it("should fail to book an already booked book", async () => {
+    const mockBook = { _id: "bookId123", booked: true };
+    Book.findById.mockResolvedValue(mockBook);
+
+    const res = await request(app)
+      .put("/api/ngo/bookBooks/bookId123")
+      .set("Authorization", `Bearer ${ngoToken}`)
+      .expect(400);
+
+    expect(res.body).toEqual({ error: "Already Booked" });
+  });
+
+  // Clothes APIs
+  it("should donate clothes as a donor", async () => {
+    const clothesData = {
+      clothesDescription: "20 T-shirts",
+      ageGroup: "10-12",
+      address: "Test Address",
+      contact: "9876543210",
+      booked: false,
+      user_id: "60c72b2f5f1b2c001f4e0b6b",
+    };
+    Clothes.create.mockResolvedValue(clothesData);
+
+    const res = await request(app)
+      .post("/api/donor/donateClothes")
+      .send(clothesData)
+      .set("Authorization", `Bearer ${donorToken}`)
+      .expect(200);
+
+    expect(res.body).toEqual(clothesData);
+  });
+
+  it("should fail to donate clothes if required fields are missing", async () => {
+    const incompleteData = { clothesDescription: "Textbook" };
+
+    const res = await request(app)
+      .post("/api/donor/donateClothes")
+      .send(incompleteData)
+      .set("Authorization", `Bearer ${donorToken}`)
+      .expect(400);
+
+    expect(res.body).toEqual({ error: "Please fill in all the fields" });
+  });
+
+  it("should book a donated clothes for an NGO", async () => {
+    const mockNgo = { _id: "6732098149087e9a678c671a" };
+
+    const mockClothes = {
+      _id: "clothesId123",
+      clothesDescription: "20 T-shirts",
+      ageGroup: "10-12",
+      address: "123 Main St",
+      contact: "1234567890",
+      booked: false,
+      user_id: "userId123",
+      ngo_id: null,
+      save: jest.fn().mockResolvedValue({
+        _id: "clothesId123",
+        clothesDescription: "20 T-shirts",
+        ageGroup: "10-12",
+        address: "123 Main St",
+        contact: "1234567890",
+        booked: true,
+        user_id: "userId123",
+        ngo_id: mockNgo._id,
+      }),
+    };
+
+    Clothes.findById.mockResolvedValue(mockClothes);
+
+    const res = await request(app)
+      .put("/api/ngo/bookClothes/clothesId123")
+      .set("Authorization", `Bearer ${ngoToken}`)
+      .expect(200);
+
+    expect(res.body).toHaveProperty("booked", true);
+    expect(res.body).toHaveProperty("ngo_id", mockNgo._id);
+
+    expect(mockClothes.save).toHaveBeenCalled();
+  });
+
+  it("should fail to clothes an already booked clothes", async () => {
+    const mockClothes = { _id: "clothesId123", booked: true };
+    Clothes.findById.mockResolvedValue(mockClothes);
+
+    const res = await request(app)
+      .put("/api/ngo/bookClothes/clothesId123")
+      .set("Authorization", `Bearer ${ngoToken}`)
+      .expect(400);
+
+    expect(res.body).toEqual({ error: "Already Booked" });
+  });
+});

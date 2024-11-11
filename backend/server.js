@@ -36,10 +36,13 @@ app.use("/api/NGO", clothesNGORoutes)
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(process.env.PORT, () => {
+    const port = process.env.PORT || 0;
+    app.listen(port, () => {
       console.log("connected to db & listening to port", process.env.PORT);
     });
   })
   .catch((error) => {
     console.log(error);
   });
+
+  module.exports = app;

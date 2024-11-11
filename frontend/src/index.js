@@ -5,7 +5,10 @@ import App from "./App";
 
 import { AuthContextProvider } from "./context/authContext";
 import { AuthContextNGOProvider } from "./context/authContextNGO";
+
 import { FoodDonationsContextProvider } from "./context/foodDonationsContext";
+import { BookDonationsContextProvider } from "./context/bookDonationsContext";
+import { ClothesDonationsContextProvider } from "./context/clothesDonationsContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -13,7 +16,11 @@ root.render(
     <AuthContextNGOProvider>
       <AuthContextProvider>
         <FoodDonationsContextProvider>
+          <BookDonationsContextProvider>
+            <ClothesDonationsContextProvider>
         <App />
+        </ClothesDonationsContextProvider>
+        </BookDonationsContextProvider>
         </FoodDonationsContextProvider>
       </AuthContextProvider>
     </AuthContextNGOProvider>
