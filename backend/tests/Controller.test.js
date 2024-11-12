@@ -14,7 +14,7 @@ let donorToken, ngoToken;
 beforeAll(async () => {
   const donorLoginResponse = await request(app)
     .post("/api/donor/login")
-    .send({ email: "raya@gmail.com", password: "Abcd1234#" })
+    .send({ email: "test@gmail.com", password: "Abcd1234#" })
     .expect(200);
   donorToken = donorLoginResponse.body.token;
 
@@ -273,5 +273,57 @@ describe("Donation APIs", () => {
       .expect(400);
 
     expect(res.body).toEqual({ error: "Already Booked" });
+  });
+
+  // Rating 
+  it("should allow an NGO to rate a donor successfully", async () => {
+    const ratingData = {
+      donorId: "673393fd524f93b3a1a6bace",
+      rating: 4,
+    };
+
+    const response = await request(app)
+      .post("/api/donor/rateDonor")
+      .set("Authorization", `Bearer ${ngoToken}`)
+      .send(ratingData)
+      .expect(200);
+
+    expect(response.body).toHaveProperty(
+      "message",
+      "Rating added successfully"
+    );
+    expect(response.body).toHaveProperty("donor");
+    expect(response.body.donor).toHaveProperty("avg_rating");
+    expect(response.body.donor).toHaveProperty("email");
+    expect(response.body.donor).toHaveProperty("ratings");
+  });
+
+  it('should return an error if rating is invalid', async () => {
+    const invalidRatingData = {
+      donorId: "donorId123", 
+      rating: 6,             
+    };
+
+    const response = await request(app)
+      .post("/api/donor/rateDonor")
+      .set("Authorization", `Bearer ${ngoToken}`)
+      .send(invalidRatingData)
+      .expect(400);
+
+    expect(response.body).toHaveProperty('error', 'Rating must be between 1 and 5');
+  });
+
+  it('should return an error if unauthorized access is attempted', async () => {
+    const ratingData = {
+      donorId: "donorId123",
+      rating: 4,
+    };
+
+    const response = await request(app)
+      .post("/api/donor/rateDonor")
+      .send(ratingData) 
+      .expect(401);
+
+    expect(response.body).toHaveProperty('error', 'NGO Authorization token required');
   });
 });
