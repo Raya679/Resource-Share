@@ -14,7 +14,7 @@ let donorToken, ngoToken;
 beforeAll(async () => {
   const donorLoginResponse = await request(app)
     .post("/api/donor/login")
-    .send({ email: "raya@gmail.com", password: "Raya123#" })
+    .send({ email: "raya@gmail.com", password: "Abcd1234#" })
     .expect(200);
   donorToken = donorLoginResponse.body.token;
 
@@ -35,14 +35,14 @@ describe("Donation APIs", () => {
       address: "Test Address",
       contact: "9876543210",
       booked: false,
-      user_id: "60c72b2f5f1b2c001f4e0b6b", // Sample ObjectId of a Donor
+      user_id: "60c72b2f5f1b2c001f4e0b6b",
     };
     Food.create.mockResolvedValue(foodData);
 
     const res = await request(app)
-      .post("/api/donor/donateFood") // Adjusted route for donating food
+      .post("/api/donor/donateFood")
       .send(foodData)
-      .set("Authorization", `Bearer ${donorToken}`) // Use donor token
+      .set("Authorization", `Bearer ${donorToken}`)
       .expect(200);
 
     expect(res.body).toEqual(foodData);
@@ -61,7 +61,7 @@ describe("Donation APIs", () => {
   });
 
   it("should book a donated food for an NGO", async () => {
-    const mockNgo = { _id: "6732098149087e9a678c671a" }; // Mocked NGO object
+    const mockNgo = { _id: "6732098149087e9a678c671a" };
 
     const mockFood = {
       _id: "foodId123",
@@ -90,7 +90,7 @@ describe("Donation APIs", () => {
 
     const res = await request(app)
       .put("/api/ngo/bookFood/foodId123")
-      .set("Authorization", `Bearer ${ngoToken}`) // Use NGO token for authentication
+      .set("Authorization", `Bearer ${ngoToken}`)
       .expect(200);
 
     expect(res.body).toHaveProperty("booked", true);
@@ -104,8 +104,8 @@ describe("Donation APIs", () => {
     Food.findById.mockResolvedValue(mockFood);
 
     const res = await request(app)
-      .put("/api/ngo/bookFood/foodId123") // Adjusted the route for booking donated food
-      .set("Authorization", `Bearer ${ngoToken}`) // Use NGO token
+      .put("/api/ngo/bookFood/foodId123")
+      .set("Authorization", `Bearer ${ngoToken}`)
       .expect(400);
 
     expect(res.body).toEqual({ error: "Already Booked" });
@@ -145,7 +145,7 @@ describe("Donation APIs", () => {
   });
 
   it("should book a donated book for an NGO", async () => {
-    const mockNgo = { _id: "6732098149087e9a678c671a" }; // Mocked NGO object
+    const mockNgo = { _id: "6732098149087e9a678c671a" };
 
     const mockBook = {
       _id: "bookId123",
