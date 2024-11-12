@@ -44,6 +44,10 @@ const foodSchema = new Schema(
       ref: "User",
       default: null,
     },
+    ngo_email: {
+      type: String,
+      default: null,
+    },
     user_avg_rating: {
       type: String,
       default: "No rating yet",

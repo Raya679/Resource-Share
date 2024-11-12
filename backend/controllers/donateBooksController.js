@@ -62,6 +62,7 @@ const bookDonatedBooks = async (req, res) => {
 
     book.booked = true;
     book.ngo_id = req.ngo._id;
+    book.ngo_email = req.ngo.email;
     const result = await book.save();
     res.status(200).json(result);
   } catch (error) {

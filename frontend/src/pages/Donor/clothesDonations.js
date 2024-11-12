@@ -129,7 +129,8 @@ const DonorClothesDonationsDashboard = () => {
                         <div className="relative border p-4 rounded-md shadow-md bg-purple-50">
                           <div>
                             <p>
-                              <strong>Description:</strong> {donation.clothesDescription}
+                              <strong>Description:</strong>{" "}
+                              {donation.clothesDescription}
                             </p>
                             <p>
                               <strong>Age Group:</strong> {donation.ageGroup}
@@ -141,15 +142,20 @@ const DonorClothesDonationsDashboard = () => {
                               <strong>Contact:</strong> {donation.contact}
                             </p>
                           </div>
-                          <button
-                            className="absolute top-2 right-2 text-red-500"
-                            onClick={() => handleDelete(donation._id)}
-                          >
-                            &#x2715;
-                          </button>
                           {donation.booked && (
                             <div className="absolute bottom-2 right-2 bg-purple-400 text-white px-2 py-1 rounded">
                               Booked!!
+                            </div>
+                          )}
+                          {donation.ngo_email && donation.booked && (
+                            <div className="mt-1 text-s">
+                              Booked by{" "}
+                              <a
+                                href={`mailto:${donation.ngo_email}`}
+                                className="text-blue-700 hover:text-blue-900"
+                              >
+                                {donation.ngo_email}
+                              </a>
                             </div>
                           )}
                         </div>

@@ -35,7 +35,7 @@ const DonorBookDonationsDashboard = () => {
 
   // Delete book donation
   const handleDelete = async (id) => {
-    console.log(id)
+    console.log(id);
     if (!donor) {
       setError("You must be logged in");
       return;
@@ -56,7 +56,6 @@ const DonorBookDonationsDashboard = () => {
       console.log("Error deleting food:", response.statusText);
     }
   };
-
 
   // Create book donation
   const [bookDescription, setBookDescription] = useState("");
@@ -131,7 +130,8 @@ const DonorBookDonationsDashboard = () => {
                         <div className="relative border p-4 rounded-md shadow-md bg-blue-50">
                           <div>
                             <p>
-                              <strong>Description:</strong> {donation.bookDescription}
+                              <strong>Description:</strong>{" "}
+                              {donation.bookDescription}
                             </p>
                             <p>
                               <strong>Age Group:</strong> {donation.ageGroup}
@@ -143,15 +143,21 @@ const DonorBookDonationsDashboard = () => {
                               <strong>Contact:</strong> {donation.contact}
                             </p>
                           </div>
-                          <button
-                            className="absolute top-2 right-2 text-red-500"
-                            onClick={() => handleDelete(donation._id)}
-                          >
-                            &#x2715;
-                          </button>
+
                           {donation.booked && (
                             <div className="absolute bottom-2 right-2 bg-blue-400 text-white px-2 py-1 rounded">
                               Booked!!
+                            </div>
+                          )}
+                          {donation.ngo_email && donation.booked && (
+                            <div className="mt-1 text-s">
+                              Booked by{" "}
+                              <a
+                                href={`mailto:${donation.ngo_email}`}
+                                className="text-blue-700 hover:text-blue-900"
+                              >
+                                {donation.ngo_email}
+                              </a>
                             </div>
                           )}
                         </div>

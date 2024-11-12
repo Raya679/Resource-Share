@@ -35,7 +35,7 @@ const DonorFoodDonationsDashboard = () => {
 
   // Delete food donation
   const handleDelete = async (id) => {
-    console.log(id)
+    console.log(id);
     if (!donor) {
       setError("You must be logged in");
       return;
@@ -154,8 +154,19 @@ const DonorFoodDonationsDashboard = () => {
                             &#x2715;
                           </button>
                           {donation.booked && (
-                            <div className="absolute bottom-2 right-2 bg-green-400 text-white px-2 py-1 rounded">
-                              Booked!!
+                            <div className="absolute bottom-2 right-2 bg-blue-400 text-white px-2 py-1 rounded">
+                              <span>Booked!!</span>
+                            </div>
+                          )}
+                          {donation.ngo_email && donation.booked && (
+                            <div className="mt-1 text-s">
+                              Booked by{" "}
+                              <a
+                                href={`mailto:${donation.ngo_email}`}
+                                className="text-blue-700 hover:text-blue-900"
+                              >
+                                {donation.ngo_email}
+                              </a>
                             </div>
                           )}
                         </div>
@@ -246,4 +257,3 @@ const DonorFoodDonationsDashboard = () => {
 };
 
 export default DonorFoodDonationsDashboard;
-

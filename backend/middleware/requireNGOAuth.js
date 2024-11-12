@@ -12,7 +12,7 @@ const requireNGOAuth = async (req, res, next) => {
   try {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
-    req.ngo = await NGO.findOne({ _id }).select("_id");
+    req.ngo = await NGO.findOne({ _id }).select("_id email");
     next();
   } catch (error) {
     console.log(error);

@@ -63,6 +63,7 @@ const bookDonatedFood = async (req, res) => {
 
     food.booked = true;
     food.ngo_id = req.ngo._id;
+    food.ngo_email = req.ngo.email;
     const result = await food.save();
     res.status(200).json(result);
   } catch (error) {
