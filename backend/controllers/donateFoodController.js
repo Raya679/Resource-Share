@@ -1,7 +1,6 @@
-const Food = require('../models/donateFoodModel');
+const Food = require("../models/donateFoodModel");
 
 const getDonatedFoodsDonor = async (req, res) => {
- 
   try {
     const donor_id = req.donor._id;
     const food = await Food.find({ user_id: donor_id }).sort({ createdAt: -1 });
@@ -13,7 +12,7 @@ const getDonatedFoodsDonor = async (req, res) => {
 
 const getDonatedFoodsNGO = async (req, res) => {
   try {
-    const food = await Food.find({booked: false}).sort({ createdAt: -1 });
+    const food = await Food.find({ booked: false }).sort({ createdAt: -1 });
     res.status(200).json(food);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -23,12 +22,26 @@ const getDonatedFoodsNGO = async (req, res) => {
 const donateFoodDonor = async (req, res) => {
   const { foodItem, quantity, expiry, address, contact } = req.body;
   if (!foodItem || !quantity || !expiry || !address || !contact) {
-    return res.status(400).json({ error: 'Please fill in all the fields' });
+    return res.status(400).json({ error: "Please fill in all the fields" });
   }
 
   try {
     const user_id = req.donor._id;
-    const food = await Food.create({ foodItem, quantity, expiry, address, contact, user_id });
+    const user_rating = req.donor.ratings || [];
+
+    let user_avg_rating = "No rating yet";
+    if (user_rating.length > 0)
+      user_avg_rating = Math.ceil(req.donor.avg_rating).toString();
+
+    const food = await Food.create({
+      foodItem,
+      quantity,
+      expiry,
+      address,
+      contact,
+      user_id,
+      user_avg_rating,
+    });
     res.status(200).json(food);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -41,15 +54,15 @@ const bookDonatedFood = async (req, res) => {
   try {
     const food = await Food.findById(id);
     if (!food) {
-      return res.status(404).json({ error: 'Food not found' });
+      return res.status(404).json({ error: "Food not found" });
     }
 
-    if(food.booked==true){
-        return res.status(400).json({ error: 'Already Booked' });
+    if (food.booked == true) {
+      return res.status(400).json({ error: "Already Booked" });
     }
 
     food.booked = true;
-    food.ngo_id = req.ngo._id; // Assuming req.ngo contains the logged-in NGO's information
+    food.ngo_id = req.ngo._id;
     const result = await food.save();
     res.status(200).json(result);
   } catch (error) {
@@ -63,7 +76,7 @@ const deleteDonatedFood = async (req, res) => {
   try {
     const food = await Food.findOneAndDelete({ _id: id });
     if (!food) {
-      return res.status(404).json({ error: 'Food not found' });
+      return res.status(404).json({ error: "Food not found" });
     }
 
     res.status(200).json(food);
@@ -74,8 +87,10 @@ const deleteDonatedFood = async (req, res) => {
 
 const getBookedFood = async (req, res) => {
   try {
-    const ngo_id = req.ngo._id; 
-    const bookedFood = await Food.find({ booked: true, ngo_id }).sort({ createdAt: -1 });
+    const ngo_id = req.ngo._id;
+    const bookedFood = await Food.find({ booked: true, ngo_id }).sort({
+      createdAt: -1,
+    });
     res.status(200).json(bookedFood);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -88,5 +103,5 @@ module.exports = {
   donateFoodDonor,
   bookDonatedFood,
   deleteDonatedFood,
-  getBookedFood
+  getBookedFood,
 };

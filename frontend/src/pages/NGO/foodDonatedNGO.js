@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
 import { useFoodDonationsContext } from "../../hooks/useFoodDonationsContext";
 import { useAuthContextNGO } from "../../hooks/useAuthContextNGO";
-import "../../css/NGODonationsDashboard.css"; 
+import "../../css/NGODonationsDashboard.css";
 
 const NGOFoodDonationsDashboard = () => {
   const { foodDonations, dispatch } = useFoodDonationsContext();
@@ -45,16 +45,28 @@ const NGOFoodDonationsDashboard = () => {
     if (response.ok) {
       dispatch({ type: "BOOK_FOOD_DONATION", payload: json });
 
-      // Show notification for 5 seconds
       setNotification(`Food donation (${json.foodItem}) successfully booked!`);
-
-      // Automatically hide notification after 5 seconds
       setTimeout(() => {
         setNotification(null);
       }, 5000);
     } else {
       console.log("Error booking donation:", response.statusText);
     }
+  };
+
+  const renderStars = (rating) => {
+    const numRating = parseFloat(rating);
+    let stars = "";
+    for (let i = 0; i < 5; i++) {
+      if (i < Math.floor(numRating)) {
+        stars += "★";
+      } else if (i < Math.ceil(numRating)) {
+        stars += "☆";
+      } else {
+        stars += "☆";
+      }
+    }
+    return stars;
   };
 
   return (
@@ -78,7 +90,7 @@ const NGOFoodDonationsDashboard = () => {
                 }}
               >
                 <ul>
-                  {foodDonations &&
+                  {foodDonations && foodDonations.length > 0 ? (
                     foodDonations.map((donation) => (
                       <li key={donation._id} className="mb-4">
                         <div className="relative border p-4 rounded-md shadow-md bg-green-50">
@@ -98,27 +110,37 @@ const NGOFoodDonationsDashboard = () => {
                             <p>
                               <strong>Contact:</strong> {donation.contact}
                             </p>
+                            <p>
+                              <strong>Donor Rating:</strong>{" "}
+                              {renderStars(donation.user_avg_rating)} (
+                              {donation.user_avg_rating})
+                            </p>
                           </div>
-                          {!donation.booked && (
+                          {!donation.booked ? (
                             <button
                               className="absolute bottom-2 right-2 text-white bg-green-500 hover:bg-green-600 rounded-md px-4 py-1"
                               onClick={() => handleBook(donation._id)}
                             >
                               Book
                             </button>
-                          )}
-                          {donation.booked && (
+                          ) : (
                             <p className="absolute bottom-2 right-2 text-green-500">
                               Booked
                             </p>
                           )}
                         </div>
                       </li>
-                    ))}
+                    ))
+                  ) : (
+                    <p className="text-center text-gray-500">
+                      No food donations available
+                    </p>
+                  )}
                 </ul>
               </div>
             </div>
           </div>
+
           {/* Notification */}
           {notification && (
             <div className="notification animate-notification">

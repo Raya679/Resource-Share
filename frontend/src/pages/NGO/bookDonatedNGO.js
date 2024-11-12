@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
 import { useBookDonationsContext } from "../../hooks/useBookDonationsContext";
 import { useAuthContextNGO } from "../../hooks/useAuthContextNGO";
-import "../../css/NGODonationsDashboard.css"; 
+import "../../css/NGODonationsDashboard.css";
 
 const NGOBookDonationsDashboard = () => {
   const { bookDonations, dispatch } = useBookDonationsContext();
@@ -45,16 +45,31 @@ const NGOBookDonationsDashboard = () => {
     if (response.ok) {
       dispatch({ type: "BOOK_BOOK_DONATION", payload: json });
 
-      // Show notification for 5 seconds
-      setNotification(`Book donation (${json.bookDescription}) successfully booked!`);
-
-      // Automatically hide notification after 5 seconds
+      setNotification(
+        `Book donation (${json.bookDescription}) successfully booked!`
+      );
       setTimeout(() => {
         setNotification(null);
       }, 5000);
     } else {
       console.log("Error booking donation:", response.statusText);
     }
+  };
+
+  // Function to render stars based on rating
+  const renderStars = (rating) => {
+    const numRating = parseFloat(rating);
+    let stars = "";
+    for (let i = 0; i < 5; i++) {
+      if (i < Math.floor(numRating)) {
+        stars += "★";
+      } else if (i < Math.ceil(numRating)) {
+        stars += "☆";
+      } else {
+        stars += "☆";
+      }
+    }
+    return stars;
   };
 
   return (
@@ -84,7 +99,8 @@ const NGOBookDonationsDashboard = () => {
                         <div className="relative border p-4 rounded-md shadow-md bg-blue-50">
                           <div>
                             <p>
-                              <strong>Book Description:</strong> {donation.bookDescription}
+                              <strong>Book Description:</strong>{" "}
+                              {donation.bookDescription}
                             </p>
                             <p>
                               <strong>Age Group:</strong> {donation.ageGroup}
@@ -94,6 +110,11 @@ const NGOBookDonationsDashboard = () => {
                             </p>
                             <p>
                               <strong>Contact:</strong> {donation.contact}
+                            </p>
+                            <p>
+                              <strong>Donor Rating:</strong>{" "}
+                              {renderStars(donation.user_avg_rating)} (
+                              {donation.user_avg_rating})
                             </p>
                           </div>
                           {!donation.booked && (

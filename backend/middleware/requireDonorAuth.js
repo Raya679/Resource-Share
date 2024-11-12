@@ -13,7 +13,7 @@ const requireDonorAuth = async (req, res, next) => {
   try {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
-    req.donor = await Donor.findOne({ _id }).select("_id");
+    req.donor = await Donor.findOne({ _id }).select("_id ratings avg_rating");
     next();
   } catch (error) {
     console.log(error);

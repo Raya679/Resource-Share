@@ -14,10 +14,10 @@ const signupSchema = new Schema({
     required: true,
   },
   NGO_ID: {
-    type:Number,
-    required:true,
-    unique:true,
-    min:10,
+    type: Number,
+    required: true,
+    unique: true,
+    min: 10,
   },
   password: {
     type: String,
@@ -29,7 +29,7 @@ const signupSchema = new Schema({
 signupSchema.statics.signup = async function (email, name, NGO_ID, password) {
   const exists_email = await this.findOne({ email });
 
-  if (!email || !name || !NGO_ID|| !password) {
+  if (!email || !name || !NGO_ID || !password) {
     throw Error("All fields must be filled");
   }
 
@@ -72,5 +72,5 @@ signupSchema.statics.login = async function (email, password) {
   return NGO;
 };
 
-const NGO= new mongoose.model("NGO", signupSchema);
+const NGO = new mongoose.model("NGO", signupSchema);
 module.exports = NGO;

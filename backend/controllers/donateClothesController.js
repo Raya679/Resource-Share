@@ -28,7 +28,13 @@ const donateClothesDonor = async (req, res) => {
 
   try {
     const user_id = req.donor._id;
-    const clothes = await Clothes.create({ clothesDescription,ageGroup,  address, contact, user_id });
+
+    const user_rating = req.donor.ratings || []; 
+
+    let user_avg_rating = "No rating yet"
+    if(user_rating.length>0) user_avg_rating = (Math.ceil(req.donor.avg_rating)).toString()
+
+    const clothes = await Clothes.create({ clothesDescription,ageGroup,  address, contact, user_id, user_avg_rating });
     res.status(200).json(clothes);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -49,7 +55,7 @@ const bookDonatedClothes = async (req, res) => {
     }
 
     clothes.booked = true;
-    clothes.ngo_id = req.ngo._id; // Assuming req.ngo contains the logged-in NGO's information
+    clothes.ngo_id = req.ngo._id; 
     const result = await clothes.save();
     res.status(200).json(result);
   } catch (error) {

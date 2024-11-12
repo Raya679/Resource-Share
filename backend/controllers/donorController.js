@@ -29,4 +29,35 @@ const loginDonor = async (req, res) => {
   }
 };
 
-module.exports = { signupDonor, loginDonor };
+const rateDonorByNGO = async (req, res) => {
+  const { donorId, rating } = req.body;
+  console.log(donorId);
+  console.log(rating);
+
+  if (rating < 1 || rating > 5) {
+    return res.status(400).json({ error: "Rating must be between 1 and 5" });
+  }
+
+  try {
+    const donor = await Donor.findById(donorId);
+    if (!donor) {
+      return res.status(404).json({ error: "Donor not found" });
+    }
+
+    await donor.addRating(rating);
+    console.log(donor.ratings);
+    res.status(200).json({
+      message: "Rating added successfully",
+      donor: {
+        email: donor.email,
+        name: donor.name,
+        avg_rating: donor.avg_rating,
+        ratings: donor.ratings,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { signupDonor, loginDonor, rateDonorByNGO };

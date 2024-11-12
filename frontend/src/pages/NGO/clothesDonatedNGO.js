@@ -45,10 +45,7 @@ const NGOClothesDonationsDashboard = () => {
     if (response.ok) {
       dispatch({ type: "BOOK_CLOTHES_DONATION", payload: json });
 
-      // Show notification for 5 seconds
       setNotification(`Clothes donation (${json.clothesDescription}) successfully booked!`);
-
-      // Automatically hide notification after 5 seconds
       setTimeout(() => {
         setNotification(null);
       }, 5000);
@@ -56,6 +53,21 @@ const NGOClothesDonationsDashboard = () => {
       console.log("Error booking donation:", response.statusText);
     }
   };
+
+      const renderStars = (rating) => {
+        const numRating = parseFloat(rating); 
+        let stars = '';
+        for (let i = 0; i < 5; i++) {
+          if (i < Math.floor(numRating)) {
+            stars += '★'; 
+          } else if (i < Math.ceil(numRating)) {
+            stars += '☆'; 
+          } else {
+            stars += '☆'; 
+          }
+        }
+        return stars;
+      };
 
   return (
     <div className="min-h-screen flex flex-col bg-purple-50">
@@ -94,6 +106,9 @@ const NGOClothesDonationsDashboard = () => {
                             </p>
                             <p>
                               <strong>Contact:</strong> {donation.contact}
+                            </p>
+                            <p>
+                              <strong>Donor Rating:</strong> {renderStars(donation.user_avg_rating)} ({donation.user_avg_rating})
                             </p>
                           </div>
                           {!donation.booked && (

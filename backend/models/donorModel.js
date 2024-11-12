@@ -14,26 +14,40 @@ const signupSchema = new Schema({
     required: true,
   },
   contact: {
-    type:Number,
-    required:true,
-    min:10
+    type: Number,
+    required: true,
+    min: 10,
   },
-  aadharNo:{
-    type:Number,
-    required:true,
-    min:12,
+  aadharNo: {
+    type: Number,
+    required: true,
+    min: 12,
   },
   password: {
     type: String,
     required: true,
   },
+  avg_rating: {
+    type: Number,
+    default: 0,
+  },
+  ratings: {
+    type: [Number],
+    default: [],
+  },
 });
 
 // static signup method
-signupSchema.statics.signup = async function (email, name, contact,aadharNo, password) {
+signupSchema.statics.signup = async function (
+  email,
+  name,
+  contact,
+  aadharNo,
+  password
+) {
   const exists_email = await this.findOne({ email });
 
-  if (!email || !name || !contact || !aadharNo|| !password) {
+  if (!email || !name || !contact || !aadharNo || !password) {
     throw Error("All fields must be filled");
   }
 
@@ -54,7 +68,13 @@ signupSchema.statics.signup = async function (email, name, contact,aadharNo, pas
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
 
-  const donor = await this.create({ email, name, contact,aadharNo, password: hash });
+  const donor = await this.create({
+    email,
+    name,
+    contact,
+    aadharNo,
+    password: hash,
+  });
 
   return donor;
 };
@@ -76,5 +96,18 @@ signupSchema.statics.login = async function (email, password) {
   return donor;
 };
 
-const Donor= new mongoose.model("Donor", signupSchema);
+signupSchema.methods.addRating = async function (rating) {
+  if (rating < 1 || rating > 5) {
+    throw Error("Rating must be between 1 and 5");
+  }
+
+  this.ratings.push(rating);
+  this.avg_rating =
+    this.ratings.reduce((acc, curr) => acc + curr, 0) / this.ratings.length;
+  await this.save();
+
+  return this;
+};
+
+const Donor = new mongoose.model("Donor", signupSchema);
 module.exports = Donor;
