@@ -31,30 +31,7 @@ const DonorClothesDonationsDashboard = () => {
     if (donor) {
       fetchClothesDonations();
     }
-  }, [dispatch, donor]);
-
-  // Delete clothes donation
-  const handleDelete = async (id) => {
-    if (!donor) {
-      setError("You must be logged in");
-      return;
-    }
-
-    const response = await fetch(`/api/donor/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${donor.token}`,
-      },
-    });
-
-    const json = await response.json();
-
-    if (response.ok) {
-      dispatch({ type: "DELETE_CLOTHES_DONATIONS", payload: json });
-    } else {
-      console.log("Error deleting clothes donation:", response.statusText);
-    }
-  };
+  }, [dispatch, donor,clothesDonations]);
 
   // Create clothes donation
   const [clothesDescription, setClothesDescription] = useState("");

@@ -31,7 +31,7 @@ const DonorFoodDonationsDashboard = () => {
     if (donor) {
       fetchFoodDonations();
     }
-  }, [dispatch, donor]);
+  }, [dispatch, donor, foodDonations]);
 
   // Delete food donation
   const handleDelete = async (id) => {

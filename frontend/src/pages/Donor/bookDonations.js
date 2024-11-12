@@ -31,31 +31,7 @@ const DonorBookDonationsDashboard = () => {
     if (donor) {
       fetchBookDonations();
     }
-  }, [dispatch, donor]);
-
-  // Delete book donation
-  const handleDelete = async (id) => {
-    console.log(id);
-    if (!donor) {
-      setError("You must be logged in");
-      return;
-    }
-
-    const response = await fetch(`/api/donor/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${donor.token}`,
-      },
-    });
-
-    const json = await response.json();
-
-    if (response.ok) {
-      dispatch({ type: "DELETE_BOOK_DONATIONS", payload: json });
-    } else {
-      console.log("Error deleting food:", response.statusText);
-    }
-  };
+  }, [dispatch, donor, bookDonations]);
 
   // Create book donation
   const [bookDescription, setBookDescription] = useState("");
