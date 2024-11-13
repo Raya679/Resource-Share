@@ -24,7 +24,7 @@ const NGOClothesDonationsDashboard = () => {
     if (ngo) {
       fetchClothesDonations();
     }
-  }, [dispatch, ngo]);
+  }, [dispatch, ngo, clothesDonations]);
 
   // Book clothes donation
   const handleBook = async (id) => {

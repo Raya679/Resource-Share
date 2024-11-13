@@ -24,7 +24,7 @@ const NGOBookDonationsDashboard = () => {
     if (ngo) {
       fetchBookDonations();
     }
-  }, [dispatch, ngo]);
+  }, [dispatch, ngo, bookDonations]);
 
   // Book book donation
   const handleBook = async (id) => {

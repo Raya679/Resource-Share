@@ -24,7 +24,7 @@ const NGOFoodDonationsDashboard = () => {
     if (ngo) {
       fetchFoodDonations();
     }
-  }, [dispatch, ngo]);
+  }, [dispatch, ngo, foodDonations]);
 
   // Book food donation
   const handleBook = async (id) => {

@@ -31,7 +31,7 @@ const NGODonationsDashboard = () => {
     if (ngo) {
       fetchBookedBookDonations();
     }
-  }, [bookDispatch, ngo]);
+  }, [bookDispatch, ngo, bookDonations]);
 
   // Fetch booked food donations
   useEffect(() => {
@@ -48,7 +48,7 @@ const NGODonationsDashboard = () => {
     if (ngo) {
       fetchBookedFoodDonations();
     }
-  }, [foodDispatch, ngo]);
+  }, [foodDispatch, ngo, foodDonations]);
 
   // Fetch booked clothes donations
   useEffect(() => {
@@ -65,19 +65,19 @@ const NGODonationsDashboard = () => {
     if (ngo) {
       fetchBookedClothesDonations();
     }
-  }, [clothesDispatch, ngo]);
+  }, [clothesDispatch, ngo, clothesDonations]);
 
   // Function to render stars based on rating
   const renderStars = (rating) => {
-    const numRating = parseFloat(rating); // Ensure it's a number
+    const numRating = parseFloat(rating); 
     let stars = "";
     for (let i = 0; i < 5; i++) {
       if (i < Math.floor(numRating)) {
-        stars += "★"; // Full star
+        stars += "★"; 
       } else if (i < Math.ceil(numRating)) {
-        stars += "☆"; // Half star
+        stars += "☆"; 
       } else {
-        stars += "☆"; // Empty star
+        stars += "☆"; 
       }
     }
     return stars;

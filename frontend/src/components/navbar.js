@@ -73,12 +73,6 @@ const Navbar = () => {
               <Link to="/" className="hover:text-teal-500 transition duration-300">
                 <h1>Home</h1>
               </Link>
-              <Link to="/about" className="hover:text-teal-500 transition duration-300">
-                <h1>About</h1>
-              </Link>
-              <Link to="/contactUs" className="hover:text-teal-500 transition duration-300">
-                <h1>Contact Us</h1>
-              </Link>
               <Link to="/loginNGO" className="hover:text-teal-500 transition duration-300">
                 <h1>NGO Login</h1>
               </Link>
