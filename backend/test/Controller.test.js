@@ -9,23 +9,65 @@ jest.mock("../models/donateBooksModel");
 jest.mock("../models/donateFoodModel");
 jest.mock("../models/donateClothesModel");
 
-let donorToken, ngoToken;
+describe("Auth APIs", () => {
+  it("should login donor successfully with valid credentials", async () => {
+    const res = await request(app)
+      .post("/api/donor/login")
+      .send({ email: "test@gmail.com", password: "Abcd1234#" })
+      .expect(200);
 
-beforeAll(async () => {
-  const donorLoginResponse = await request(app)
-    .post("/api/donor/login")
-    .send({ email: "test@gmail.com", password: "Abcd1234#" })
-    .expect(200);
-  donorToken = donorLoginResponse.body.token;
+    expect(res.body).toHaveProperty("token");
+    expect(res.body).toHaveProperty("email", "test@gmail.com");
+  });
 
-  const ngoLoginResponse = await request(app)
-    .post("/api/ngo/login")
-    .send({ email: "NGO123@gmail.com", password: "Abcd1234#" })
-    .expect(200);
-  ngoToken = ngoLoginResponse.body.token;
+  it("should fail donor login with wrong password", async () => {
+    const res = await request(app)
+      .post("/api/donor/login")
+      .send({ email: "test@gmail.com", password: "wrongpass" })
+      .expect(400);
+
+    expect(res.body).toHaveProperty("error", "Incorrect password");
+  });
+
+  it("should login NGO successfully with valid credentials", async () => {
+    const res = await request(app)
+      .post("/api/ngo/login")
+      .send({ email: "NGO123@gmail.com", password: "Abcd1234#" })
+      .expect(200);
+
+    expect(res.body).toHaveProperty("token");
+    expect(res.body).toHaveProperty("email", "NGO123@gmail.com");
+  });
+
+  it("should fail NGO login with missing fields", async () => {
+    const res = await request(app)
+      .post("/api/ngo/login")
+      .send({ email: "" })
+      .expect(400);
+
+    expect(res.body).toHaveProperty("error", "All fields must be filled");
+  });
 });
 
+
+let donorToken, ngoToken;
+
 describe("Donation APIs", () => {
+
+  beforeAll(async () => {
+    const donorLoginResponse = await request(app)
+      .post("/api/donor/login")
+      .send({ email: "test@gmail.com", password: "Abcd1234#" })
+      .expect(200);
+    donorToken = donorLoginResponse.body.token;
+  
+    const ngoLoginResponse = await request(app)
+      .post("/api/ngo/login")
+      .send({ email: "NGO123@gmail.com", password: "Abcd1234#" })
+      .expect(200);
+    ngoToken = ngoLoginResponse.body.token;
+  });
+
   // Food APIs
   it("should donate food as a donor", async () => {
     const foodData = {
