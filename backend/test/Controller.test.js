@@ -8,6 +8,7 @@ const Clothes = require("../models/donateClothesModel");
 jest.mock("../models/donateBooksModel");
 jest.mock("../models/donateFoodModel");
 jest.mock("../models/donateClothesModel");
+jest.mock("../sendEmail", () => jest.fn().mockResolvedValue(true));
 
 describe("Auth APIs", () => {
   it("should login donor successfully with valid credentials", async () => {
@@ -320,7 +321,7 @@ describe("Donation APIs", () => {
   // Rating 
   it("should allow an NGO to rate a donor successfully", async () => {
     const ratingData = {
-      donorId: "673393fd524f93b3a1a6bace",
+      donorId: "691426aac55adb876a74eb6a",
       rating: 4,
     };
 
